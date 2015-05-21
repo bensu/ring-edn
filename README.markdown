@@ -70,25 +70,23 @@ And finally, create another file in `src` named `awesome_app.clj` with the follo
 
 EDN offers extensible types through
 [tagged literals](https://github.com/edn-format/edn#tagged-elements)
-and `ring-edn` offers a way to read your own types from the incoming requests.
-As an example, let's add `uri`'s to EDN. In our Clojure programs
+and `ring-edn` can read those types from the incoming requests.
+As an example, let's add `uri` to EDN. In our Clojure program
 it will be represented by `java.net.URI` but in other platforms it
 might be represented differently, i.e `goog.Uri` in ClojureScript. To
 use a new type, we need to define a reader (takes a string and returns
 our representation) and a printer (takes our representation and writes
 it as a string). The printer determines the tagged literal and it is
 implemented as a multimethod of `clojure.core/print-method`. We might
-be tempted to use `#uri` but it needs to be namespaced in case an
-application needs to deal with multiple uri representations. Therefore
-we will use `#my-app/uri`:
+be tempted to use `#uri` for the tagged literal but it needs to be
+namespaced in case an application needs to deal with multiple `uri`
+representations. Therefore we will use `#my-app/uri`:
 
 ```clj
 (ns my-app.uri
   (:import (java.net URI)))
 
-(defn read-uri
-  "Transforms a string into a uri"
-  [s]
+(defn read-uri [s]
   (URI. s))
 
 (defmethod print-method java.net.URI [this w]
@@ -106,8 +104,8 @@ it should read the expression that follows with `read-uri`:
       (wrap-edn-params {:readers {'my-app/uri #'my-app.uri/read-uri}})))
 ```
 
-Other options besides `:readers` can be passed to
-`clojure.edn/read-string` as defined
+Other options besides `:readers` can be passed to `wrap-edn-params`
+which are forward to `clojure.edn/read-string` as defined
 [here](https://clojure.github.io/clojure/clojure.edn-api.html).
 
 
