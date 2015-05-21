@@ -105,7 +105,7 @@ it should read the expression that follows with `read-uri`:
 ```
 
 Other options besides `:readers` can be passed to `wrap-edn-params`
-which are forward to `clojure.edn/read-string` as defined
+which are forwarded to `clojure.edn/read-string` as defined
 [here](https://clojure.github.io/clojure/clojure.edn-api.html).
 
 
